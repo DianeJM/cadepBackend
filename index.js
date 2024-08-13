@@ -3,7 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const UserRoutes = require("./modules/users/users.routes");
 const ProductRoutes = require("./modules/products/products.routes");
-
 // initialise Express
 const app = express();
 

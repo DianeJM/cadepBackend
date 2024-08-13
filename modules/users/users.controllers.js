@@ -2,6 +2,8 @@ const { User, Product } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 const sequelize = require("sequelize");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 // create a user
 const addUser = async (req, res) => {
@@ -95,7 +97,13 @@ const userLogin = async (req, res) => {
     if(user){
       const decryptpwd = await bcrypt.compare(password, user.password);
       if(decryptpwd){
-        successResponse(res, user);
+        const access_token = jwt.sign(user.dataValues, process.env.JWT_SECRET_KEY, {expiresIn: 60 });
+        const refresh_token = jwt.sign(user.dataValues, process.env.JWT_REFRESH_KEY);
+        successResponse(res, {
+          status: true,
+          ACCESS_TOKEN: access_token,
+          REFRESH_TOKEN: refresh_token
+        });
       }else{
         res.status(401).json({
           status:false,
@@ -112,4 +120,7 @@ const userLogin = async (req, res) => {
     errorResponse(res, error);
   }
 };
+
+//refresh token api
+
 module.exports = { addUser, getUsers, getUser, getUsersWithTopProductCount, userLogin };

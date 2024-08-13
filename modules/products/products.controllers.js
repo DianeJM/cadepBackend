@@ -1,5 +1,7 @@
 const { Product, User } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 //NOTE: NEVER EXPOSE THE ID
 //NOTE: NEVER USE FOR LOOP/ FOR EACH :: IF NOT USE SQL QUERIES AS loops are slow very slow
@@ -10,7 +12,7 @@ const addProduct = async (req, res) => {
     const { name, description, price, image, ratings } = req.body;
     const { uuid } = req.params;
 
-    const user = await User.scope('withUserId').findOne({
+    const user = await User.scope("withUserId").findOne({
       where: {
         uuid,
       },
@@ -65,8 +67,9 @@ const getProduct = async (req, res) => {
 //get products that belong to certain user
 const getUserProducts = async (req, res) => {
   try {
-    const { uuid } = req.params;
-    const user = await User.findOne({
+    const { uuid } = req.user;
+
+    const user = await User.scope("withUserId").findOne({
       where: {
         uuid,
       },
