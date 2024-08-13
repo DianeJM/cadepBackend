@@ -1,7 +1,7 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
+const { Op } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     /**
@@ -11,41 +11,56 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Product.belongsTo(models.User)
+      Product.belongsTo(models.User);
     }
   }
-  Product.init({
-    uuid: {
-      defaultValue:DataTypes.UUIDV4,
-      type:DataTypes.UUID
+  Product.init(
+    {
+      uuid: {
+        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
+      },
+      userId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+      },
+      name: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      description: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      price: {
+        allowNull: false,
+        type: DataTypes.FLOAT,
+      },
+      image: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      ratings: {
+        allowNull: true,
+        type: DataTypes.INTEGER,
+      },
     },
-    userId: {
-      allowNull: false,
-      type:DataTypes.INTEGER
-    },
-    name: {
-      allowNull: false,
-      type:DataTypes.STRING
-    },
-    description: {
-      allowNull: false,
-      type:DataTypes.STRING
-    },
-    price: {
-      allowNull: false,
-      type:DataTypes.FLOAT
-    },
-    image: {
-      allowNull: false,
-      type:DataTypes.STRING
-    },
-    ratings: {
-      allowNull: true,
-      type:DataTypes.INTEGER
-    },
-  }, {
-    sequelize,
-    modelName: 'Product',
-  });
+    {
+      defaultScope: {
+        attributes: {
+          exclude: ["id"],
+        },
+      },
+      scopes: {
+        validImages: {
+          where: {
+            image: { [Op.like]: "https%" },
+          },
+        },
+      },
+      sequelize,
+      modelName: "Product",
+    }
+  );
   return Product;
 };

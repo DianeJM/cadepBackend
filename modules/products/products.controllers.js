@@ -10,7 +10,7 @@ const addProduct = async (req, res) => {
     const { name, description, price, image, ratings } = req.body;
     const { uuid } = req.params;
 
-    const user = await User.findOne({
+    const user = await User.scope('withUserId').findOne({
       where: {
         uuid,
       },
@@ -24,7 +24,7 @@ const addProduct = async (req, res) => {
         image,
         ratings,
       });
-      successResponse(res, response);
+      successResponse(res, "product added successfully");
     } else {
       res.status(401).json({
         status: false,
@@ -40,11 +40,7 @@ const addProduct = async (req, res) => {
 // get all products
 const getProducts = async (req, res) => {
   try {
-    const response = await Product.findAllAndCount({
-      attributes: {
-        exclude: id,
-      },
-    });
+    const response = await Product.scope('validImages').findAll();
     successResponse(res, response);
   } catch (error) {
     errorResponse(res, error);

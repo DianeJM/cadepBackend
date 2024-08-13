@@ -38,8 +38,19 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.STRING
     },
   }, {
+    defaultScope:{
+      attributes: {
+        exclude: ['id', 'updatedAt'],
+      }
+    },
+    scopes: {
+      withUserId: {
+        attributes: {
+          include: ['id'],
+        },
+      },
+    },
     sequelize,
-    updatedAt: false,
     modelName: 'User',
   });
   return User;

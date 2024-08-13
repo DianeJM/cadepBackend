@@ -1,14 +1,17 @@
 const { User, Product } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
-const sequelize = require('sequelize');
+const sequelize = require("sequelize");
+const bcrypt = require("bcrypt");
 
+// create a user
 const addUser = async (req, res) => {
   try {
     const { name, phone, password } = req.body;
+    const hashedPassword = bcrypt.hashSync(password, 10);
     const response = await User.create({
       name: name,
       phone: phone,
-      password: password,
+      password: hashedPassword,
     });
     successResponse(res, response);
   } catch (error) {
@@ -16,12 +19,13 @@ const addUser = async (req, res) => {
   }
 };
 
+// get users
 const getUsers = async (req, res) => {
   try {
     const response = await User.findAndCountAll({
       attributes: {
-        exclude:['id']
-      }
+        exclude: ["id"],
+      },
     });
     successResponse(res, response);
   } catch (error) {
@@ -29,6 +33,7 @@ const getUsers = async (req, res) => {
   }
 };
 
+//get one user by uuid
 const getUser = async (req, res) => {
   try {
     const { uuid } = req.params;
@@ -51,7 +56,6 @@ const getUser = async (req, res) => {
   }
 };
 
-
 //get 10 users with greatest product count
 const getUsersWithTopProductCount = async (req, res) => {
   try {
@@ -70,7 +74,7 @@ const getUsersWithTopProductCount = async (req, res) => {
           ],
         ],
       },
-      order: [[sequelize.literal('productCount'), 'DESC']],
+      order: [[sequelize.literal("productCount"), "DESC"]],
       limit: 10,
     });
     successResponse(res, response);
@@ -79,4 +83,33 @@ const getUsersWithTopProductCount = async (req, res) => {
   }
 };
 
-module.exports = { addUser, getUsers, getUser, getUsersWithTopProductCount };
+// User login
+const userLogin = async (req, res) => {
+  try {
+    const {phone, password} = req.body;
+    const user = await User.findOne({
+      where: {
+        phone, 
+      }
+    });
+    if(user){
+      const decryptpwd = await bcrypt.compare(password, user.password);
+      if(decryptpwd){
+        successResponse(res, user);
+      }else{
+        res.status(401).json({
+          status:false,
+          message: "wrong password"
+        })
+      }
+    }else{
+      res.status(404).json({
+        status:false,
+        message: "user not found"
+      })
+    }
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+module.exports = { addUser, getUsers, getUser, getUsersWithTopProductCount, userLogin };
