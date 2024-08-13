@@ -5,5 +5,17 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.11.0",
     "sequelize": "^6.37.3"
-  }
+  },
+  "name": "cadepbackend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

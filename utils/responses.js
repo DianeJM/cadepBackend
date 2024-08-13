@@ -5,6 +5,7 @@ const successResponse = (res, data) => {
   });
 };
 const errorResponse = (res, error) => {
+  console.log("error", error);
   res.status(500).json({
     status: false,
     message: "Internal Server Error",

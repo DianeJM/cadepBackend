@@ -1,5 +1,6 @@
-const { User } = require("../../models");
+const { User, Product } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
+const sequelize = require('sequelize');
 
 const addUser = async (req, res) => {
   try {
@@ -49,4 +50,33 @@ const getUser = async (req, res) => {
     errorResponse(res, error);
   }
 };
-module.exports = { addUser, getUsers, getUser };
+
+
+//get 10 users with greatest product count
+const getUsersWithTopProductCount = async (req, res) => {
+  try {
+    // const response = await sequelize.query('SELECT userId,COUNT(id) FROM Products GROUP BY userId LIMIT 10;');
+    const response = await User.findAll({
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`(
+                        SELECT COUNT(*)
+                        FROM Products AS product
+                        WHERE
+                            product.userId = user.id
+                    )`),
+            "productCount",
+          ],
+        ],
+      },
+      order: [[sequelize.literal('productCount'), 'DESC']],
+      limit: 10,
+    });
+    successResponse(res, response);
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+
+module.exports = { addUser, getUsers, getUser, getUsersWithTopProductCount };
