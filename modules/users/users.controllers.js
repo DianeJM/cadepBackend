@@ -97,7 +97,7 @@ const userLogin = async (req, res) => {
     if(user){
       const decryptpwd = await bcrypt.compare(password, user.password);
       if(decryptpwd){
-        const access_token = jwt.sign(user.dataValues, process.env.JWT_SECRET_KEY, {expiresIn: 60 });
+        const access_token = jwt.sign(user.dataValues, process.env.JWT_SECRET_KEY, {expiresIn: "30days" });
         const refresh_token = jwt.sign(user.dataValues, process.env.JWT_REFRESH_KEY);
         successResponse(res, {
           status: true,

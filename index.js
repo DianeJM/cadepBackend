@@ -6,8 +6,14 @@ const ProductRoutes = require("./modules/products/products.routes");
 // initialise Express
 const app = express();
 
+var whitelist = ['http://localhost:5000', 'http://localhost:6000']
+const corsOptions =  { 
+  origin: whitelist,
+  optionsSuccessStatus: 200,
+};
+ 
 //middlewares
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/users", UserRoutes);
 app.use("/products", ProductRoutes);
