@@ -3,19 +3,25 @@ const { errorResponse, successResponse } = require("../../utils/responses");
 const sequelize = require("sequelize");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+const { welcomeEmail } = require("../../utils/mailController");
 require('dotenv').config();
 
 // create a user
 const addUser = async (req, res) => {
   try {
-    const { name, phone, password } = req.body;
+    const { name, phone, email, password } = req.body;
     const hashedPassword = bcrypt.hashSync(password, 10);
     const response = await User.create({
       name: name,
       phone: phone,
+      email: email,
       password: hashedPassword,
     });
+    if(response){
+      welcomeEmail(response);
+    }
     successResponse(res, response);
+
   } catch (error) {
     errorResponse(res, error);
   }

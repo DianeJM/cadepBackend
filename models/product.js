@@ -54,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
       scopes: {
         validImages: {
           where: {
-            image: { [Op.like]: "https%" },
+            image: { [Op.like]: "%%" },
           },
         },
       },

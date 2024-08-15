@@ -1,4 +1,5 @@
 const { Product, User } = require("../../models");
+const { getUrl } = require("../../utils/getUrl");
 const { errorResponse, successResponse } = require("../../utils/responses");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -9,8 +10,9 @@ require("dotenv").config();
 //add a new product
 const addProduct = async (req, res) => {
   try {
-    const { name, description, price, image, ratings } = req.body;
+    const { name, description, price, ratings } = req.body;
     const { uuid } = req.params;
+    const image  = getUrl(req);
 
     const user = await User.scope("withUserId").findOne({
       where: {

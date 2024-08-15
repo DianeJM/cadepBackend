@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to <%= companyName %>!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333333;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #666666;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #007BFF;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to <%= companyName %>, <%= userName %>!</h1>
+        <p>Dear <%= userName %>,</p>
+        <p>We're thrilled to have you on board! At <%= companyName %>, we strive to provide the best experience for our users, and we're excited to have you as part of our community.</p>
+        <p>To get started, we recommend exploring the following features:</p>
+        <ul>
+            <li>Feature 1: Brief description</li>
+            <li>Feature 2: Brief description</li>
+            <li>Feature 3: Brief description</li>
+        </ul>
+        <p>If you have any questions or need assistance, don't hesitate to reach out to our support team. We're here to help you every step of the way.</p>
+        <p>Click the button below to log in and start exploring:</p>
+        <a href="<%= loginUrl %>" class="button">Log In to Your Account</a>
+        <div class="footer">
+            <p>Thank you for choosing <%= companyName %>!</p>
+            <p>&copy; <%= new Date().getFullYear() %> <%= companyName %>. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
